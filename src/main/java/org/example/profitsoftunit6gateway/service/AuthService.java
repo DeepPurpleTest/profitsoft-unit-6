@@ -1,6 +1,8 @@
 package org.example.profitsoftunit6gateway.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.example.profitsoftunit6gateway.auth.GoogleAuthenticationService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.server.reactive.ServerHttpRequest;
@@ -11,8 +13,9 @@ import reactor.core.publisher.Mono;
 
 import java.time.Duration;
 import java.time.temporal.ChronoUnit;
+import java.util.UUID;
 
-
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class AuthService {
@@ -21,10 +24,37 @@ public class AuthService {
 
 	public static final String COOKIE_AUTH_STATE = "auth-state";
 
+	public static final String COOKIE_SESSION_ID = "SESSION-ID";
+
 	private static final String ENDPOINT_CALLBACK = PREFIX_OAUTH + "/callback";
 
+	private final GoogleAuthenticationService googleAuthenticationService;
 
-	public void addStateCookie(ServerWebExchange exchange, String state) {
+	private final SessionService sessionService;
+
+	public Mono<Void> authenticate(ServerWebExchange exchange) {
+		String state = UUID.randomUUID().toString();
+		addStateCookie(exchange, state);
+		String redirectUri = buildRedirectUri(exchange.getRequest());
+		String authenticationUrl = googleAuthenticationService.generateAuthenticationUrl(redirectUri, state);
+
+		return sendRedirect(exchange, authenticationUrl);
+	}
+
+	public Mono<Void> authCallback(ServerWebExchange exchange) {
+		String code = exchange.getRequest().getQueryParams().getFirst("code");
+		String state = exchange.getRequest().getQueryParams().getFirst("state");
+		String redirectUri = buildRedirectUri(exchange.getRequest());
+
+		return verifyState(state, exchange.getRequest())
+				.then(googleAuthenticationService.processAuthenticationCallback(code, redirectUri)
+						.doOnNext(userInfo -> log.info("User authenticated: {}", userInfo))
+						.flatMap(sessionService::saveSession)
+						.flatMap(session -> sessionService.addSessionCookie(exchange, session))
+						.then(sendRedirect(exchange, "/api/profile")));
+	}
+
+	private void addStateCookie(ServerWebExchange exchange, String state) {
 		exchange.getResponse().addCookie(ResponseCookie.from(COOKIE_AUTH_STATE)
 				.value(state)
 				.path(PREFIX_OAUTH)
@@ -33,8 +63,9 @@ public class AuthService {
 				.build());
 	}
 
-	public String buildRedirectUri(ServerHttpRequest request) {
+	private String buildRedirectUri(ServerHttpRequest request) {
 		String baseUrl = getBaseUrl(request);
+
 		return baseUrl + ENDPOINT_CALLBACK;
 	}
 
@@ -42,18 +73,20 @@ public class AuthService {
 		return request.getURI().toString().substring(0, request.getURI().toString().indexOf(PREFIX_OAUTH));
 	}
 
-	public Mono<Void> sendRedirect(ServerWebExchange exchange, String location) {
+	private Mono<Void> sendRedirect(ServerWebExchange exchange, String location) {
 		ServerHttpResponse response = exchange.getResponse();
 		response.setStatusCode(HttpStatus.FOUND);
 		response.getHeaders().add("Location", location);
+
 		return response.setComplete();
 	}
 
-	public Mono<Void> verifyState(String state, ServerHttpRequest request) {
+	private Mono<Void> verifyState(String state, ServerHttpRequest request) {
 		String cookieState = request.getCookies().getFirst(COOKIE_AUTH_STATE).getValue();
 		if (!state.equals(cookieState)) {
 			return Mono.error(new IllegalStateException("Invalid state"));
 		}
+
 		return Mono.empty();
 	}
 }

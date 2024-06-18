@@ -13,13 +13,13 @@ import reactor.core.publisher.Mono;
 import java.time.Duration;
 import java.time.Instant;
 
+import static org.example.profitsoftunit6gateway.service.AuthService.COOKIE_SESSION_ID;
+
 @Service
 @RequiredArgsConstructor
 public class SessionService {
 
 	public static final Duration SESSION_DURATION = Duration.ofHours(1);
-
-	public static final String COOKIE_SESSION_ID = "SESSION-ID";
 
 	private final UserSessionRepository userSessionRepository;
 
