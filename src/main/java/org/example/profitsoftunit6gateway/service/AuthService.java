@@ -51,7 +51,7 @@ public class AuthService {
 						.doOnNext(userInfo -> log.info("User authenticated: {}", userInfo))
 						.flatMap(sessionService::saveSession)
 						.flatMap(session -> sessionService.addSessionCookie(exchange, session))
-						.then(sendRedirect(exchange, "/api/profile")));
+						.then(sendRedirect(exchange, "http://localhost:3050/projects")));
 	}
 
 	private void addStateCookie(ServerWebExchange exchange, String state) {

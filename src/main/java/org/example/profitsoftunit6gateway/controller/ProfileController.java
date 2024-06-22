@@ -33,6 +33,7 @@ public class ProfileController {
 		return Mono.just(UserInfo.builder()
 				.email(session.getEmail())
 				.name(session.getName())
+				.authorities(session.getAuthorities())
 				.build());
 	}
 }
