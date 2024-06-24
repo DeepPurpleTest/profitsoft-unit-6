@@ -24,8 +24,8 @@ import static org.example.profitsoftunit6gateway.service.AuthService.COOKIE_SESS
 @RequiredArgsConstructor
 public class SessionService {
 
-	public static final Duration SESSION_DURATION = Duration.ofSeconds(180);
-	public static final Duration SESSION_UPDATE_TIME = Duration.ofSeconds(60);
+	public static final Duration SESSION_DURATION = Duration.ofMinutes(60);
+	public static final Duration SESSION_UPDATE_TIME = Duration.ofMinutes(10);
 
 	private final UserSessionRepository userSessionRepository;
 
