@@ -1,0 +1,46 @@
+server:
+  port: 1000
+  error:
+    include-message: always
+    include-binding-errors: always
+
+oauth:
+  google:
+    clientId: ${CLIENT_ID}
+    clientSecret: ${CLIENT_SECRET}
+    scope: "openid profile email"
+
+spring:
+  application:
+    name: gateway
+
+  config:
+    import: optional:consul:/
+
+  cloud:
+    consul:
+      host: localhost
+      port: 8500
+      discovery:
+        health-check-path: /health
+
+resilience4j:
+  circuitbreaker:
+    instances:
+      services:
+        wait-duration-in-open-state: 10s
+        failure-rate-threshold: 60
+        slow-call-duration-threshold:
+          - 2s
+        minimum-number-of-calls: 3
+        permitted-number-of-calls-in-half-open-state: 1
+
+management:
+  endpoint:
+    health:
+      show-details: always
+  endpoints:
+    web:
+      base-path: /
+      exposure:
+        include: "*"
