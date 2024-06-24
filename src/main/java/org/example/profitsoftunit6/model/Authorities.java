@@ -1,4 +1,4 @@
-package org.example.profitsoftunit6gateway.model;
+package org.example.profitsoftunit6.model;
 
 public enum Authorities {
 	ENABLE_SEE_SECRET_PAGE,

@@ -1,4 +1,4 @@
-package org.example.profitsoftunit6gateway.service;
+package org.example.profitsoftunit6.service;
 
 public class UnauthorizedException extends RuntimeException {
 

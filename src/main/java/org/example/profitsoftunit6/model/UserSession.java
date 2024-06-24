@@ -1,4 +1,4 @@
-package org.example.profitsoftunit6gateway.model;
+package org.example.profitsoftunit6.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;

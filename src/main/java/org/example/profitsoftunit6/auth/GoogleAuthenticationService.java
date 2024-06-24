@@ -1,4 +1,4 @@
-package org.example.profitsoftunit6gateway.auth;
+package org.example.profitsoftunit6.auth;
 
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
@@ -8,9 +8,9 @@ import io.micrometer.common.util.StringUtils;
 import io.netty.channel.ChannelOption;
 import io.netty.handler.timeout.ReadTimeoutHandler;
 import lombok.extern.slf4j.Slf4j;
-import org.example.profitsoftunit6gateway.auth.dto.GoogleOauthTokenRequest;
-import org.example.profitsoftunit6gateway.auth.dto.GoogleOauthTokenResponse;
-import org.example.profitsoftunit6gateway.auth.dto.UserInfo;
+import org.example.profitsoftunit6.auth.dto.GoogleOauthTokenRequest;
+import org.example.profitsoftunit6.auth.dto.GoogleOauthTokenResponse;
+import org.example.profitsoftunit6.auth.dto.UserInfo;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;

@@ -1,10 +1,10 @@
-package org.example.profitsoftunit6gateway.controller;
+package org.example.profitsoftunit6.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.example.profitsoftunit6gateway.auth.dto.UserInfo;
-import org.example.profitsoftunit6gateway.model.UserSession;
-import org.example.profitsoftunit6gateway.service.SessionService;
-import org.example.profitsoftunit6gateway.service.UnauthorizedException;
+import org.example.profitsoftunit6.auth.dto.UserInfo;
+import org.example.profitsoftunit6.model.UserSession;
+import org.example.profitsoftunit6.service.SessionService;
+import org.example.profitsoftunit6.service.UnauthorizedException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;

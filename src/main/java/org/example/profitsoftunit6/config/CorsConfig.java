@@ -1,4 +1,4 @@
-package org.example.profitsoftunit6gateway.config;
+package org.example.profitsoftunit6.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

@@ -1,10 +1,10 @@
-package org.example.profitsoftunit6gateway.service;
+package org.example.profitsoftunit6.service;
 
 import lombok.RequiredArgsConstructor;
-import org.example.profitsoftunit6gateway.auth.dto.UserInfo;
-import org.example.profitsoftunit6gateway.model.Authorities;
-import org.example.profitsoftunit6gateway.model.UserSession;
-import org.example.profitsoftunit6gateway.repository.UserSessionRepository;
+import org.example.profitsoftunit6.auth.dto.UserInfo;
+import org.example.profitsoftunit6.model.Authorities;
+import org.example.profitsoftunit6.model.UserSession;
+import org.example.profitsoftunit6.repository.UserSessionRepository;
 import org.springframework.http.HttpCookie;
 import org.springframework.http.ResponseCookie;
 import org.springframework.stereotype.Service;
@@ -18,7 +18,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
-import static org.example.profitsoftunit6gateway.service.AuthService.COOKIE_SESSION_ID;
+import static org.example.profitsoftunit6.service.AuthService.COOKIE_SESSION_ID;
 
 @Service
 @RequiredArgsConstructor

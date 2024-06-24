@@ -1,8 +1,8 @@
-package org.example.profitsoftunit6gateway.config;
+package org.example.profitsoftunit6.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
-import org.example.profitsoftunit6gateway.model.UserSession;
+import org.example.profitsoftunit6.model.UserSession;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.ReactiveRedisConnectionFactory;

@@ -1,8 +1,8 @@
-package org.example.profitsoftunit6gateway.controller;
+package org.example.profitsoftunit6.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.example.profitsoftunit6gateway.service.AuthService;
+import org.example.profitsoftunit6.service.AuthService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;

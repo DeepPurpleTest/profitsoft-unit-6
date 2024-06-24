@@ -1,8 +1,8 @@
-package org.example.profitsoftunit6gateway.service;
+package org.example.profitsoftunit6.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.example.profitsoftunit6gateway.auth.GoogleAuthenticationService;
+import org.example.profitsoftunit6.auth.GoogleAuthenticationService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.server.reactive.ServerHttpRequest;

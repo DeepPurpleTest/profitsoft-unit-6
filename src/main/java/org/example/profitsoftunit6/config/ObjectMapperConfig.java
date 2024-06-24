@@ -1,4 +1,4 @@
-package org.example.profitsoftunit6gateway.config;
+package org.example.profitsoftunit6.config;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;

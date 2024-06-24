@@ -1,4 +1,4 @@
-package org.example.profitsoftunit6gateway.auth.dto;
+package org.example.profitsoftunit6.auth.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;

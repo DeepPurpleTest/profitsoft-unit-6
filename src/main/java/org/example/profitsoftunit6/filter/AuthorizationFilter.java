@@ -1,9 +1,9 @@
-package org.example.profitsoftunit6gateway.filter;
+package org.example.profitsoftunit6.filter;
 
 
 import lombok.RequiredArgsConstructor;
-import org.example.profitsoftunit6gateway.service.SessionService;
-import org.example.profitsoftunit6gateway.service.UnauthorizedException;
+import org.example.profitsoftunit6.service.SessionService;
+import org.example.profitsoftunit6.service.UnauthorizedException;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
 import org.springframework.core.Ordered;

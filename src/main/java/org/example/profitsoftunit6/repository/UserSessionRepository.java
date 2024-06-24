@@ -1,8 +1,8 @@
-package org.example.profitsoftunit6gateway.repository;
+package org.example.profitsoftunit6.repository;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.example.profitsoftunit6gateway.model.UserSession;
+import org.example.profitsoftunit6.model.UserSession;
 import org.springframework.data.redis.core.ReactiveRedisOperations;
 import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Mono;
