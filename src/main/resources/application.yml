@@ -1,5 +1,5 @@
 server:
-  port: 1000
+  port: ${APP_PORT}
   error:
     include-message: always
     include-binding-errors: always
@@ -11,6 +11,11 @@ oauth:
     scope: "openid profile email"
 
 spring:
+  data:
+    redis:
+      host: ${REDIS_HOST}
+      port: ${REDIS_PORT}
+
   application:
     name: gateway
 
@@ -19,8 +24,8 @@ spring:
 
   cloud:
     consul:
-      host: localhost
-      port: 8500
+      host: ${CONSUL_HOST}
+      port: ${CONSUL_HOST}
       discovery:
         health-check-path: /health
 
