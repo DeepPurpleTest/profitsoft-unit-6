@@ -25,7 +25,7 @@ spring:
   cloud:
     consul:
       host: ${CONSUL_HOST}
-      port: ${CONSUL_HOST}
+      port: ${CONSUL_PORT}
       discovery:
         health-check-path: /health
 
