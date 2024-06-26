@@ -49,3 +49,6 @@ management:
       base-path: /
       exposure:
         include: "*"
+
+frontend:
+  url: ${FRONTEND_URL}

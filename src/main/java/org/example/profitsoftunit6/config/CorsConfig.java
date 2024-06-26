@@ -1,5 +1,6 @@
 package org.example.profitsoftunit6.config;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.cors.CorsConfiguration;
@@ -9,10 +10,13 @@ import org.springframework.web.cors.reactive.UrlBasedCorsConfigurationSource;
 @Configuration
 public class CorsConfig {
 
+	@Value("${frontend.url}")
+	private String frontendUrl;
+
 	@Bean
 	public CorsWebFilter corsWebFilter() {
 		CorsConfiguration corsConfig = new CorsConfiguration();
-		corsConfig.addAllowedOrigin("http://localhost:3050");
+		corsConfig.addAllowedOrigin(frontendUrl);
 		corsConfig.addAllowedMethod("GET");
 		corsConfig.addAllowedMethod("POST");
 		corsConfig.addAllowedMethod("PUT");
