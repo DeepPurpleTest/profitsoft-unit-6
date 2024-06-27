@@ -5,7 +5,6 @@ import org.example.profitsoftunit6.auth.dto.UserInfo;
 import org.example.profitsoftunit6.model.Authorities;
 import org.example.profitsoftunit6.model.UserSession;
 import org.example.profitsoftunit6.repository.UserSessionRepository;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpCookie;
 import org.springframework.http.ResponseCookie;
 import org.springframework.stereotype.Service;
@@ -29,9 +28,6 @@ public class SessionService {
 	public static final Duration SESSION_UPDATE_TIME = Duration.ofMinutes(10);
 
 	private final UserSessionRepository userSessionRepository;
-
-	@Value("${frontend.domain}")
-	private String frontendDomain;
 
 	public Mono<UserSession> checkSession(ServerWebExchange exchange) {
 		HttpCookie sessionCookie = exchange.getRequest().getCookies().getFirst(COOKIE_SESSION_ID);
@@ -94,7 +90,6 @@ public class SessionService {
 	public Mono<Void> addSessionCookie(ServerWebExchange exchange, UserSession session) {
 		return Mono.fromRunnable(() -> exchange.getResponse().addCookie(ResponseCookie.from(COOKIE_SESSION_ID)
 				.value(session.getId())
-				.domain(frontendDomain)
 				.path("/")
 				.maxAge(SESSION_DURATION)
 				.secure(true)

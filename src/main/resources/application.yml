@@ -52,4 +52,3 @@ management:
 
 frontend:
   url: ${FRONTEND_URL}
-  domain: ${FRONTEND_DOMAIN}
