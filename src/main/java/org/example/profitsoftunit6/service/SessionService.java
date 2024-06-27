@@ -30,8 +30,8 @@ public class SessionService {
 
 	private final UserSessionRepository userSessionRepository;
 
-	@Value("${frontend.url}")
-	private String frontendUrl;
+	@Value("${frontend.domain}")
+	private String frontendDomain;
 
 	public Mono<UserSession> checkSession(ServerWebExchange exchange) {
 		HttpCookie sessionCookie = exchange.getRequest().getCookies().getFirst(COOKIE_SESSION_ID);
@@ -94,7 +94,7 @@ public class SessionService {
 	public Mono<Void> addSessionCookie(ServerWebExchange exchange, UserSession session) {
 		return Mono.fromRunnable(() -> exchange.getResponse().addCookie(ResponseCookie.from(COOKIE_SESSION_ID)
 				.value(session.getId())
-				.domain(frontendUrl)
+				.domain(frontendDomain)
 				.path("/")
 				.maxAge(SESSION_DURATION)
 				.secure(true)
