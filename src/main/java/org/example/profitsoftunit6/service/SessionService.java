@@ -93,6 +93,7 @@ public class SessionService {
 				.path("/")
 				.maxAge(SESSION_DURATION)
 				.secure(true)
+				.sameSite("None")
 				.httpOnly(true) // Prevents JavaScript from accessing the cookie
 				.build()));
 	}
