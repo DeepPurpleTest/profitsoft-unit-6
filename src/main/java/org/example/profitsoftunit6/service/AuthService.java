@@ -3,6 +3,7 @@ package org.example.profitsoftunit6.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.profitsoftunit6.auth.GoogleAuthenticationService;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.server.reactive.ServerHttpRequest;
@@ -32,6 +33,9 @@ public class AuthService {
 
 	private final SessionService sessionService;
 
+	@Value("${frontend.url}")
+	private String frontendUrl;
+
 	public Mono<Void> authenticate(ServerWebExchange exchange) {
 		String state = UUID.randomUUID().toString();
 		addStateCookie(exchange, state);
@@ -51,7 +55,7 @@ public class AuthService {
 						.doOnNext(userInfo -> log.info("User authenticated: {}", userInfo))
 						.flatMap(sessionService::saveSession)
 						.flatMap(session -> sessionService.addSessionCookie(exchange, session))
-						.then(sendRedirect(exchange, "http://localhost:3050/projects")));
+						.then(sendRedirect(exchange, frontendUrl + "/projects")));
 	}
 
 	private void addStateCookie(ServerWebExchange exchange, String state) {
@@ -66,11 +70,17 @@ public class AuthService {
 	private String buildRedirectUri(ServerHttpRequest request) {
 		String baseUrl = getBaseUrl(request);
 
-		return baseUrl + ENDPOINT_CALLBACK;
+		String redirectUrl = baseUrl + ENDPOINT_CALLBACK;
+		log.info("REDIRECT URL: {}", redirectUrl);
+		return redirectUrl;
 	}
 
 	private static String getBaseUrl(ServerHttpRequest request) {
-		return request.getURI().toString().substring(0, request.getURI().toString().indexOf(PREFIX_OAUTH));
+		String baseUrl = request.getURI().toString().substring(0, request.getURI().toString().indexOf(PREFIX_OAUTH));
+		log.info("BASE URL: {}", baseUrl);
+
+		baseUrl = baseUrl.replace("http://", "https://");
+		return baseUrl;
 	}
 
 	private Mono<Void> sendRedirect(ServerWebExchange exchange, String location) {
