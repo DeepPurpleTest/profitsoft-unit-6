@@ -2,6 +2,7 @@ package org.example.profitsoftunit6.filter;
 
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.example.profitsoftunit6.service.SessionService;
 import org.example.profitsoftunit6.service.UnauthorizedException;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
@@ -12,6 +13,9 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
+import java.time.LocalDateTime;
+
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class AuthorizationFilter implements GlobalFilter, Ordered {
@@ -21,6 +25,10 @@ public class AuthorizationFilter implements GlobalFilter, Ordered {
 
 	@Override
 	public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
+		log.info("Time: {}", LocalDateTime.now());
+		log.info("Cookies: {}", exchange.getRequest().getCookies());
+		log.info("URL: {}", exchange.getRequest().getPath().value());
+
 		if (exchange.getRequest().getPath().value().startsWith(PREFIX_API)) {
 			return sessionService.checkSession(exchange)
 					.then(chain.filter(exchange))
