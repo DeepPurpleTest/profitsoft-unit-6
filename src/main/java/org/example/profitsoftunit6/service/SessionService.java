@@ -36,20 +36,30 @@ public class SessionService {
 		}
 
 		return userSessionRepository.findById(sessionCookie.getValue())
-				.flatMap(session -> {
-							if (session.isExpired()) {
-								return Mono.error(new UnauthorizedException("Session expired"));
-							}
-
-							if (isExtendTime(session)) {
-								return updateSessionTime(session)
-										.flatMap(updatedSession -> addSessionCookie(exchange, updatedSession)
-												.thenReturn(updatedSession));
-							}
-
-							return Mono.just(session);
-						}
+				.flatMap(session ->
+						session.isExpired()
+								? Mono.error(new UnauthorizedException("Session expired"))
+								: Mono.just(session)
 				).switchIfEmpty(Mono.error(new UnauthorizedException("Session not found")));
+	}
+
+	public Mono<UserInfo> getUserInfo(ServerWebExchange exchange, UserSession session) {
+		if (!isExtendTime(session)) {
+			return toUserInfo(session);
+		}
+
+		return updateSessionTime(session)
+				.flatMap(updatedSession -> addSessionCookie(exchange, updatedSession)
+						.thenReturn(updatedSession))
+				.flatMap(this::toUserInfo);
+	}
+
+	private Mono<UserInfo> toUserInfo(UserSession session) {
+		return Mono.just(UserInfo.builder()
+				.email(session.getEmail())
+				.name(session.getName())
+				.authorities(session.getAuthorities())
+				.build());
 	}
 
 	public Mono<UserSession> saveSession(UserInfo userInfo) {
@@ -72,6 +82,10 @@ public class SessionService {
 		userSession.setExpiresAt(Instant.now().plus(SESSION_DURATION));
 
 		return userSession;
+	}
+
+	public Mono<Void> invalidateSession(String sessionId) {
+		return userSessionRepository.deleteById(sessionId);
 	}
 
 	private boolean isExtendTime(UserSession userSession) {

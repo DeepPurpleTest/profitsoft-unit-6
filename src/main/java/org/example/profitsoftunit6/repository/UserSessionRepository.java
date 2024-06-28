@@ -24,4 +24,8 @@ public class UserSessionRepository {
 	public Mono<UserSession> findById(String id) {
 		return userSessionOps.opsForValue().get(id);
 	}
+
+	public Mono<Void> deleteById(String id) {
+		return userSessionOps.delete(id).then();
+	}
 }

@@ -2,7 +2,6 @@ package org.example.profitsoftunit6.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.example.profitsoftunit6.auth.dto.UserInfo;
-import org.example.profitsoftunit6.model.UserSession;
 import org.example.profitsoftunit6.service.SessionService;
 import org.example.profitsoftunit6.service.UnauthorizedException;
 import org.springframework.http.HttpStatus;
@@ -23,17 +22,9 @@ public class ProfileController {
 	@GetMapping("/profile")
 	public Mono<UserInfo> profile(ServerWebExchange exchange) {
 		return sessionService.checkSession(exchange)
-				.flatMap(this::toUserInfo)
+				.flatMap(session -> sessionService.getUserInfo(exchange, session))
 				.onErrorResume(UnauthorizedException.class, e -> {
 					throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unauthorized access");
 				});
-	}
-
-	private Mono<UserInfo> toUserInfo(UserSession session) {
-		return Mono.just(UserInfo.builder()
-				.email(session.getEmail())
-				.name(session.getName())
-				.authorities(session.getAuthorities())
-				.build());
 	}
 }
