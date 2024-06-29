@@ -1,6 +1,7 @@
 package org.example.profitsoftunit6.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.example.profitsoftunit6.auth.dto.UserInfo;
 import org.example.profitsoftunit6.model.Authorities;
 import org.example.profitsoftunit6.model.UserSession;
@@ -13,6 +14,7 @@ import reactor.core.publisher.Mono;
 
 import java.time.Duration;
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -20,6 +22,7 @@ import java.util.UUID;
 
 import static org.example.profitsoftunit6.service.AuthService.COOKIE_SESSION_ID;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class SessionService {
@@ -30,17 +33,34 @@ public class SessionService {
 	private final UserSessionRepository userSessionRepository;
 
 	public Mono<UserSession> checkSession(ServerWebExchange exchange) {
+		log.info("CHECKSESSION");
+		log.info("TIME: {}", LocalDateTime.now());
+
 		HttpCookie sessionCookie = exchange.getRequest().getCookies().getFirst(COOKIE_SESSION_ID);
 		if (sessionCookie == null) {
+			log.warn("sessionCookie == null");
 			return Mono.error(new UnauthorizedException("Session Cookie not found"));
 		}
 
 		return userSessionRepository.findById(sessionCookie.getValue())
-				.flatMap(session ->
-						session.isExpired()
-								? Mono.error(new UnauthorizedException("Session expired"))
-								: Mono.just(session)
-				).switchIfEmpty(Mono.error(new UnauthorizedException("Session not found")));
+				.flatMap(session -> {
+							if (session.isExpired()) {
+								log.warn("SESSION IS EXPIRED!!!");
+								return Mono.error(new UnauthorizedException("Session expired"));
+							}
+
+							log.info("Return session for mapping in userInfo");
+							return Mono.just(session);
+						}
+//						session.isExpired()
+//								? Mono.error(new UnauthorizedException("Session expired"))
+//								: Mono.just(session)
+//				).switchIfEmpty(Mono.error(new UnauthorizedException("Session not found")));
+				).switchIfEmpty(Mono.defer(() -> {
+					log.warn("Session not found for ID: {}", sessionCookie.getValue());
+
+					return Mono.error(new UnauthorizedException("Session not found"));
+				}));
 	}
 
 	public Mono<UserInfo> getUserInfo(ServerWebExchange exchange, UserSession session) {
