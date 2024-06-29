@@ -28,6 +28,9 @@ spring:
       port: ${CONSUL_PORT}
       discovery:
         health-check-path: /health
+        prefer-ip-address: false
+        hostname: ${EXTERNAL_IP_ADDRESS}
+        port: ${APPLICATION_PORT}
 
 resilience4j:
   circuitbreaker:
