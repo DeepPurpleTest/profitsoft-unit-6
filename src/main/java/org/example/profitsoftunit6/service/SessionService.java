@@ -6,6 +6,7 @@ import org.example.profitsoftunit6.auth.dto.UserInfo;
 import org.example.profitsoftunit6.model.Authorities;
 import org.example.profitsoftunit6.model.UserSession;
 import org.example.profitsoftunit6.repository.UserSessionRepository;
+import org.springframework.cglib.core.Local;
 import org.springframework.http.HttpCookie;
 import org.springframework.http.ResponseCookie;
 import org.springframework.stereotype.Service;
@@ -64,10 +65,14 @@ public class SessionService {
 	}
 
 	public Mono<UserInfo> getUserInfo(ServerWebExchange exchange, UserSession session) {
+		log.info("getUserInfo: {} {}", session.getName(), session.getEmail());
+
 		if (!isExtendTime(session)) {
+			log.info("!isExtendTime(session): {} {}", session.getName(), session.getEmail());
 			return toUserInfo(session);
 		}
 
+		log.info("UpdateSessionTime: {} {}", session.getName(), session.getEmail());
 		return updateSessionTime(session)
 				.flatMap(updatedSession -> addSessionCookie(exchange, updatedSession)
 						.thenReturn(updatedSession))
@@ -75,6 +80,7 @@ public class SessionService {
 	}
 
 	private Mono<UserInfo> toUserInfo(UserSession session) {
+		log.info("toUserInfo: {} {}", session.getName(), session.getEmail());
 		return Mono.just(UserInfo.builder()
 				.email(session.getEmail())
 				.name(session.getName())
@@ -113,6 +119,7 @@ public class SessionService {
 		Instant expiresAt = userSession.getExpiresAt();
 		Duration timeLeft = Duration.between(now, expiresAt);
 
+		log.info("isExtendTime: {} {} \nTime: {}", userSession.getName(), userSession.getEmail(), LocalDateTime.now());
 		return timeLeft.getSeconds() < SESSION_UPDATE_TIME.getSeconds();
 	}
 	private Mono<UserSession> updateSessionTime(UserSession userSession) {
@@ -122,6 +129,7 @@ public class SessionService {
 	}
 
 	public Mono<Void> addSessionCookie(ServerWebExchange exchange, UserSession session) {
+		log.info("addSessionCookie for {} {}", session.getName(), session.getEmail());
 		return Mono.fromRunnable(() -> exchange.getResponse().addCookie(ResponseCookie.from(COOKIE_SESSION_ID)
 				.value(session.getId())
 				.path("/")
